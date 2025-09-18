@@ -1,0 +1,485 @@
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button.jsx'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
+import { Badge } from '@/components/ui/badge.jsx'
+import { Heart, MapPin, Calendar, Star, Download, Share2, Plus, Minus } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import './App.css'
+
+// Import adventure images
+import whitewaterRaftingImg from './assets/adventures/whitewater-rafting.jpg'
+import viaFerrataImg from './assets/adventures/via-ferrata.webp'
+import iceClimbingImg from './assets/adventures/ice-climbing.webp'
+import polarBearsImg from './assets/adventures/polar-bears.jpg'
+import northernLightsImg from './assets/adventures/northern-lights.jpg'
+import whaleKayakingImg from './assets/adventures/whale-kayaking.jpg'
+import treeSpheresImg from './assets/adventures/tree-spheres.jpg'
+import suspensionBridgeImg from './assets/adventures/suspension-bridge.jpg'
+import iceHotelImg from './assets/adventures/ice-hotel.jpg'
+import leviathanImg from './assets/adventures/leviathan.jpg'
+
+const adventures = [
+  {
+    id: 1,
+    name: "The River Runner's Rush",
+    adventure: "Whitewater Rafting",
+    description: "Conquer the roaring rapids of one of Canada's most legendary rivers, battling intense waves and currents in a stunning mountain setting.",
+    location: "Kicking Horse River, British Columbia",
+    season: "May to September",
+    image: whitewaterRaftingImg,
+    category: "Water Sports",
+    intensity: "High"
+  },
+  {
+    id: 2,
+    name: "The Iron Path to the Sky",
+    adventure: "Via Ferrata",
+    description: "Ascend to breathtaking heights on a guided climbing route, traversing cliffs and suspension bridges with the safety of a fixed cable system.",
+    location: "Mt. Norquay, Banff, Alberta",
+    season: "June to October",
+    image: viaFerrataImg,
+    category: "Mountain Adventure",
+    intensity: "High"
+  },
+  {
+    id: 3,
+    name: "The Glacial Plunge",
+    adventure: "Ice Climbing",
+    description: "Scale a frozen waterfall with ice axes and crampons, a true test of strength and nerve in the heart of the Canadian Rockies.",
+    location: "Canadian Rockies, Alberta",
+    season: "December to March",
+    image: iceClimbingImg,
+    category: "Winter Sports",
+    intensity: "Extreme"
+  },
+  {
+    id: 4,
+    name: "The Arctic Ghost Bear Quest",
+    adventure: "Polar Bear Safari",
+    description: "Witness the majesty of polar bears in their natural habitat from the safety of a tundra buggy, a once-in-a-lifetime wildlife encounter.",
+    location: "Churchill, Manitoba",
+    season: "October and November",
+    image: polarBearsImg,
+    category: "Wildlife",
+    intensity: "Medium"
+  },
+  {
+    id: 5,
+    name: "The Sky Dancer's Dream",
+    adventure: "Northern Lights Viewing",
+    description: "Watch the aurora borealis dance across the night sky in a dazzling display of color, a truly magical and unforgettable experience.",
+    location: "Yellowknife, Northwest Territories",
+    season: "Late August to April",
+    image: northernLightsImg,
+    category: "Natural Phenomena",
+    intensity: "Low"
+  },
+  {
+    id: 6,
+    name: "The Ocean's Edge",
+    adventure: "Sea Kayaking with Whales",
+    description: "Paddle alongside gentle giants, experiencing the thrill of seeing whales and other marine life up close in their natural environment.",
+    location: "Johnstone Strait, British Columbia",
+    season: "July to September",
+    image: whaleKayakingImg,
+    category: "Water Sports",
+    intensity: "Medium"
+  },
+  {
+    id: 7,
+    name: "The Forest Sphere Slumber",
+    adventure: "Free Spirit Spheres",
+    description: "Sleep suspended in a handcrafted sphere in the coastal rainforest, a unique and magical accommodation experience.",
+    location: "Qualicum Beach, Vancouver Island, British Columbia",
+    season: "Year-round",
+    image: treeSpheresImg,
+    category: "Unique Accommodation",
+    intensity: "Low"
+  },
+  {
+    id: 8,
+    name: "The Canyon's Crossing",
+    adventure: "Capilano Suspension Bridge",
+    description: "Walk among the treetops on a series of suspension bridges, including the famous 137m long bridge hanging 70m above the Capilano River.",
+    location: "North Vancouver, British Columbia",
+    season: "Year-round",
+    image: suspensionBridgeImg,
+    category: "Scenic Adventure",
+    intensity: "Medium"
+  },
+  {
+    id: 9,
+    name: "The Ice Palace",
+    adventure: "Hôtel de Glace (Ice Hotel)",
+    description: "Spend a night in a hotel made entirely of ice and snow, complete with ice sculptures, an ice bar, and even an ice slide.",
+    location: "Quebec City, Quebec",
+    season: "January to March",
+    image: iceHotelImg,
+    category: "Unique Accommodation",
+    intensity: "Medium"
+  },
+  {
+    id: 10,
+    name: "The Screaming Steel",
+    adventure: "Leviathan Rollercoaster",
+    description: "Ride one of the world's tallest and fastest rollercoasters, a giga coaster that will have you screaming with delight (and terror).",
+    location: "Canada's Wonderland, Vaughan, Ontario",
+    season: "May to October",
+    image: leviathanImg,
+    category: "Thrill Rides",
+    intensity: "Extreme"
+  }
+]
+
+function App() {
+  const [bucketList, setBucketList] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [showBucketList, setShowBucketList] = useState(false)
+
+  const categories = ['All', ...new Set(adventures.map(adventure => adventure.category))]
+
+  const filteredAdventures = selectedCategory === 'All' 
+    ? adventures 
+    : adventures.filter(adventure => adventure.category === selectedCategory)
+
+  const addToBucketList = (adventure) => {
+    if (!bucketList.find(item => item.id === adventure.id)) {
+      setBucketList([...bucketList, adventure])
+    }
+  }
+
+  const removeFromBucketList = (adventureId) => {
+    setBucketList(bucketList.filter(item => item.id !== adventureId))
+  }
+
+  const isInBucketList = (adventureId) => {
+    return bucketList.some(item => item.id === adventureId)
+  }
+
+  const getIntensityColor = (intensity) => {
+    switch (intensity) {
+      case 'Low': return 'bg-green-500'
+      case 'Medium': return 'bg-yellow-500'
+      case 'High': return 'bg-orange-500'
+      case 'Extreme': return 'bg-red-500'
+      default: return 'bg-gray-500'
+    }
+  }
+
+  const generateItinerary = () => {
+    if (bucketList.length === 0) return
+
+    const itinerary = bucketList.map((adventure, index) => 
+      `${index + 1}. ${adventure.name} (${adventure.adventure})\n   📍 ${adventure.location}\n   📅 Best time: ${adventure.season}\n   ${adventure.description}\n`
+    ).join('\n')
+
+    const fullItinerary = `🍁 YOUR EPIC CANADIAN ADVENTURE BUCKET LIST 🍁\n\n${itinerary}\n\nTotal Adventures: ${bucketList.length}\n\nGenerated by Epic Canadian Adventures - Bucket List Builder\nStart planning your next thrilling adventure today!`
+
+    // Create downloadable text file
+    const blob = new Blob([fullItinerary], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'my-canadian-adventure-bucket-list.txt'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const shareItinerary = () => {
+    if (bucketList.length === 0) return
+
+    const adventureNames = bucketList.map(adventure => adventure.name).join(', ')
+    const shareText = `Check out my Epic Canadian Adventure Bucket List: ${adventureNames}! 🍁 #CanadianAdventures #BucketList`
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Canadian Adventure Bucket List',
+        text: shareText,
+        url: window.location.href
+      })
+    } else {
+      navigator.clipboard.writeText(shareText)
+      alert('Bucket list copied to clipboard!')
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      {/* Hero Section */}
+      <div className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${northernLightsImg})`,
+          }}
+        ></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="relative z-20 text-center text-white px-4"
+        >
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            EPIC CANADIAN
+          </h1>
+          <h2 className="text-4xl md:text-6xl font-bold mb-8">
+            ADVENTURES
+          </h2>
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
+            Discover thrilling, death-defying, and once-in-a-lifetime experiences across Canada. 
+            Build your ultimate bucket list of adventures that push every boundary.
+          </p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+          >
+            <Button 
+              size="lg" 
+              className="text-xl px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white border-0"
+              onClick={() => document.getElementById('adventures').scrollIntoView({ behavior: 'smooth' })}
+            >
+              Start Your Adventure
+            </Button>
+          </motion.div>
+        </motion.div>
+
+        {/* Floating Bucket List Button */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="fixed top-4 right-4 z-50"
+        >
+          <Button
+            onClick={() => setShowBucketList(!showBucketList)}
+            className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-full p-4 shadow-lg"
+          >
+            <Heart className="w-6 h-6 mr-2" />
+            Bucket List ({bucketList.length})
+          </Button>
+        </motion.div>
+      </div>
+
+      {/* Adventures Section */}
+      <div id="adventures" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl font-bold text-white mb-6">
+              Choose Your <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Thrill</span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              From heart-pounding extreme sports to magical natural phenomena, discover adventures that will change your life forever.
+            </p>
+          </motion.div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category)}
+                className={selectedCategory === category 
+                  ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-0" 
+                  : "border-gray-600 text-gray-300 hover:bg-gray-800"
+                }
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {/* Adventures Grid */}
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence>
+              {filteredAdventures.map((adventure) => (
+                <motion.div
+                  key={adventure.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  whileHover={{ y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="bg-gray-900/80 border-gray-700 overflow-hidden h-full backdrop-blur-sm">
+                    <div className="relative">
+                      <img 
+                        src={adventure.image} 
+                        alt={adventure.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-4 right-4">
+                        <Badge className={`${getIntensityColor(adventure.intensity)} text-white`}>
+                          {adventure.intensity}
+                        </Badge>
+                      </div>
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="secondary" className="bg-black/70 text-white">
+                          {adventure.category}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <CardHeader>
+                      <CardTitle className="text-white text-xl">{adventure.name}</CardTitle>
+                      <CardDescription className="text-emerald-400 font-semibold">
+                        {adventure.adventure}
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {adventure.description}
+                      </p>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center text-gray-400 text-sm">
+                          <MapPin className="w-4 h-4 mr-2 text-emerald-400" />
+                          {adventure.location}
+                        </div>
+                        <div className="flex items-center text-gray-400 text-sm">
+                          <Calendar className="w-4 h-4 mr-2 text-emerald-400" />
+                          {adventure.season}
+                        </div>
+                      </div>
+                      
+                      <Button
+                        onClick={() => isInBucketList(adventure.id) 
+                          ? removeFromBucketList(adventure.id) 
+                          : addToBucketList(adventure)
+                        }
+                        className={isInBucketList(adventure.id)
+                          ? "w-full bg-red-600 hover:bg-red-700 text-white"
+                          : "w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white border-0"
+                        }
+                      >
+                        {isInBucketList(adventure.id) ? (
+                          <>
+                            <Minus className="w-4 h-4 mr-2" />
+                            Remove from Bucket List
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add to Bucket List
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Bucket List Sidebar */}
+      <AnimatePresence>
+        {showBucketList && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed top-0 right-0 h-full w-96 bg-gray-900/95 backdrop-blur-md border-l border-gray-700 z-40 overflow-y-auto"
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white">Your Bucket List</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowBucketList(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  ✕
+                </Button>
+              </div>
+
+              {bucketList.length === 0 ? (
+                <p className="text-gray-400 text-center py-8">
+                  No adventures selected yet. Start building your epic bucket list!
+                </p>
+              ) : (
+                <>
+                  <div className="space-y-4 mb-6">
+                    {bucketList.map((adventure) => (
+                      <div key={adventure.id} className="bg-gray-800 rounded-lg p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="text-white font-semibold text-sm">{adventure.name}</h4>
+                            <p className="text-emerald-400 text-xs">{adventure.adventure}</p>
+                            <p className="text-gray-400 text-xs mt-1">{adventure.location}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeFromBucketList(adventure.id)}
+                            className="text-red-400 hover:text-red-300 p-1"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="space-y-3">
+                    <Button
+                      onClick={generateItinerary}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white border-0"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Itinerary
+                    </Button>
+                    <Button
+                      onClick={shareItinerary}
+                      variant="outline"
+                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Share Bucket List
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="bg-black/50 py-12 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h3 className="text-3xl font-bold text-white mb-4">
+            Ready for Your Next <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Adventure</span>?
+          </h3>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            Canada awaits with endless thrills, breathtaking landscapes, and unforgettable experiences. 
+            Your bucket list is just the beginning of an epic journey.
+          </p>
+          <div className="text-gray-500 text-sm">
+            <p>© 2025 Epic Canadian Adventures. Built for thrill-seekers and world travelers.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default App
