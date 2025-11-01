@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
-import { Heart, MapPin, Calendar, Star, Download, Share2, Plus, Minus } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Heart, MapPin, Calendar, Download, Share2, Plus, Minus } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import './App.css'
 
 // Import adventure images
@@ -289,8 +290,13 @@ function App() {
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="fixed top-4 right-4 z-50"
+          className="fixed top-4 right-4 z-50 flex gap-4"
         >
+          <Link to="/blog">
+            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full p-4 shadow-lg">
+              Blog
+            </Button>
+          </Link>
           <Button
             onClick={() => setShowBucketList(!showBucketList)}
             className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-full p-4 shadow-lg"
