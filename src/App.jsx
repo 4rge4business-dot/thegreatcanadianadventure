@@ -17,6 +17,9 @@ import treeSpheresImg from './assets/adventures/tree-spheres.jpg'
 import suspensionBridgeImg from './assets/adventures/suspension-bridge.jpg'
 import iceHotelImg from './assets/adventures/ice-hotel.jpg'
 import leviathanImg from './assets/adventures/leviathan.jpg'
+import tombstoneParkImg from './assets/adventures/tombstone-park.jpg'
+import westCoastTrailImg from './assets/adventures/west-coast-trail.jpg'
+import bayOfFundyImg from './assets/adventures/bay-of-fundy.jpg'
 
 const adventures = [
   {
@@ -128,6 +131,39 @@ const adventures = [
     image: leviathanImg,
     category: "Thrill Rides",
     intensity: "Extreme"
+  },
+  {
+    id: 11,
+    name: "The Wilds of the North",
+    adventure: "Tombstone Territorial Park",
+    description: "Explore the rugged beauty of the Yukon's Tombstone Territorial Park, a remote wilderness with dramatic peaks and abundant wildlife.",
+    location: "Tombstone Territorial Park, Yukon",
+    season: "June to September",
+    image: tombstoneParkImg,
+    category: "Wildlife",
+    intensity: "High"
+  },
+  {
+    id: 12,
+    name: "The West Coast Trail",
+    adventure: "Backpacking",
+    description: "Hike one of the world's most famous and challenging trails, a 75km trek along the rugged, windswept coast of Vancouver Island.",
+    location: "Pacific Rim National Park Reserve, British Columbia",
+    season: "May to September",
+    image: westCoastTrailImg,
+    category: "Mountain Adventure",
+    intensity: "Extreme"
+  },
+  {
+    id: 13,
+    name: "The Bay of Fundy's Fury",
+    adventure: "Tidal Bore Rafting",
+    description: "Ride the incredible tidal bore of the Bay of Fundy on a zodiac, an exhilarating experience as the incoming tide reverses the river's flow.",
+    location: "Shubenacadie River, Nova Scotia",
+    season: "May to October",
+    image: bayOfFundyImg,
+    category: "Water Sports",
+    intensity: "High"
   }
 ]
 
@@ -291,7 +327,7 @@ function App() {
                 onClick={() => setSelectedCategory(category)}
                 className={selectedCategory === category 
                   ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-0" 
-                  : "border-gray-600 text-gray-300 hover:bg-gray-800"
+                  : "border-gray-600 text-gray-100 hover:bg-gray-800"
                 }
               >
                 {category}
