@@ -4,137 +4,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge.jsx'
 import { Heart, MapPin, Calendar, Star, Download, Share2, Plus, Minus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { adventures } from './data/adventures.js'
 import './App.css'
 
-// Import adventure images
-import whitewaterRaftingImg from './assets/adventures/whitewater-rafting.jpg'
-import viaFerrataImg from './assets/adventures/via-ferrata.webp'
-import iceClimbingImg from './assets/adventures/ice-climbing.webp'
-import polarBearsImg from './assets/adventures/polar-bears.jpg'
-import northernLightsImg from './assets/adventures/northern-lights.jpg'
-import whaleKayakingImg from './assets/adventures/whale-kayaking.jpg'
-import treeSpheresImg from './assets/adventures/tree-spheres.jpg'
-import suspensionBridgeImg from './assets/adventures/suspension-bridge.jpg'
-import iceHotelImg from './assets/adventures/ice-hotel.jpg'
-import leviathanImg from './assets/adventures/leviathan.jpg'
-
-const adventures = [
-  {
-    id: 1,
-    name: "The River Runner's Rush",
-    adventure: "Whitewater Rafting",
-    description: "Conquer the roaring rapids of one of Canada's most legendary rivers, battling intense waves and currents in a stunning mountain setting.",
-    location: "Kicking Horse River, British Columbia",
-    season: "May to September",
-    image: whitewaterRaftingImg,
-    category: "Water Sports",
-    intensity: "High"
-  },
-  {
-    id: 2,
-    name: "The Iron Path to the Sky",
-    adventure: "Via Ferrata",
-    description: "Ascend to breathtaking heights on a guided climbing route, traversing cliffs and suspension bridges with the safety of a fixed cable system.",
-    location: "Mt. Norquay, Banff, Alberta",
-    season: "June to October",
-    image: viaFerrataImg,
-    category: "Mountain Adventure",
-    intensity: "High"
-  },
-  {
-    id: 3,
-    name: "The Glacial Plunge",
-    adventure: "Ice Climbing",
-    description: "Scale a frozen waterfall with ice axes and crampons, a true test of strength and nerve in the heart of the Canadian Rockies.",
-    location: "Canadian Rockies, Alberta",
-    season: "December to March",
-    image: iceClimbingImg,
-    category: "Winter Sports",
-    intensity: "Extreme"
-  },
-  {
-    id: 4,
-    name: "The Arctic Ghost Bear Quest",
-    adventure: "Polar Bear Safari",
-    description: "Witness the majesty of polar bears in their natural habitat from the safety of a tundra buggy, a once-in-a-lifetime wildlife encounter.",
-    location: "Churchill, Manitoba",
-    season: "October and November",
-    image: polarBearsImg,
-    category: "Wildlife",
-    intensity: "Medium"
-  },
-  {
-    id: 5,
-    name: "The Sky Dancer's Dream",
-    adventure: "Northern Lights Viewing",
-    description: "Watch the aurora borealis dance across the night sky in a dazzling display of color, a truly magical and unforgettable experience.",
-    location: "Yellowknife, Northwest Territories",
-    season: "Late August to April",
-    image: northernLightsImg,
-    category: "Natural Phenomena",
-    intensity: "Low"
-  },
-  {
-    id: 6,
-    name: "The Ocean's Edge",
-    adventure: "Sea Kayaking with Whales",
-    description: "Paddle alongside gentle giants, experiencing the thrill of seeing whales and other marine life up close in their natural environment.",
-    location: "Johnstone Strait, British Columbia",
-    season: "July to September",
-    image: whaleKayakingImg,
-    category: "Water Sports",
-    intensity: "Medium"
-  },
-  {
-    id: 7,
-    name: "The Forest Sphere Slumber",
-    adventure: "Free Spirit Spheres",
-    description: "Sleep suspended in a handcrafted sphere in the coastal rainforest, a unique and magical accommodation experience.",
-    location: "Qualicum Beach, Vancouver Island, British Columbia",
-    season: "Year-round",
-    image: treeSpheresImg,
-    category: "Unique Accommodation",
-    intensity: "Low"
-  },
-  {
-    id: 8,
-    name: "The Canyon's Crossing",
-    adventure: "Capilano Suspension Bridge",
-    description: "Walk among the treetops on a series of suspension bridges, including the famous 137m long bridge hanging 70m above the Capilano River.",
-    location: "North Vancouver, British Columbia",
-    season: "Year-round",
-    image: suspensionBridgeImg,
-    category: "Scenic Adventure",
-    intensity: "Medium"
-  },
-  {
-    id: 9,
-    name: "The Ice Palace",
-    adventure: "Hôtel de Glace (Ice Hotel)",
-    description: "Spend a night in a hotel made entirely of ice and snow, complete with ice sculptures, an ice bar, and even an ice slide.",
-    location: "Quebec City, Quebec",
-    season: "January to March",
-    image: iceHotelImg,
-    category: "Unique Accommodation",
-    intensity: "Medium"
-  },
-  {
-    id: 10,
-    name: "The Screaming Steel",
-    adventure: "Leviathan Rollercoaster",
-    description: "Ride one of the world's tallest and fastest rollercoasters, a giga coaster that will have you screaming with delight (and terror).",
-    location: "Canada's Wonderland, Vaughan, Ontario",
-    season: "May to October",
-    image: leviathanImg,
-    category: "Thrill Rides",
-    intensity: "Extreme"
-  }
-]
+import { TermsOfService } from './components/TermsOfService.jsx'
+import { PrivacyPolicy } from './components/PrivacyPolicy.jsx'
 
 function App() {
   const [bucketList, setBucketList] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [showBucketList, setShowBucketList] = useState(false)
+  const [showTos, setShowTos] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
 
   const categories = ['All', ...new Set(adventures.map(adventure => adventure.category))]
 
@@ -291,7 +172,7 @@ function App() {
                 onClick={() => setSelectedCategory(category)}
                 className={selectedCategory === category 
                   ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-0" 
-                  : "border-gray-600 text-gray-300 hover:bg-gray-800"
+                  : "bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
                 }
               >
                 {category}
@@ -450,7 +331,7 @@ function App() {
                     <Button
                       onClick={shareItinerary}
                       variant="outline"
-                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
+                      className="w-full bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       <Share2 className="w-4 h-4 mr-2" />
                       Share Bucket List
@@ -473,11 +354,20 @@ function App() {
             Canada awaits with endless thrills, breathtaking landscapes, and unforgettable experiences. 
             Your bucket list is just the beginning of an epic journey.
           </p>
-          <div className="text-gray-500 text-sm">
+          <div className="text-gray-500 text-sm space-y-2">
+            <p>
+              <button onClick={() => setShowTos(true)} className="underline hover:text-white">Terms of Service</button>
+              <span className="mx-2">|</span>
+              <button onClick={() => setShowPrivacy(true)} className="underline hover:text-white">Privacy Policy</button>
+            </p>
             <p>© 2025 Epic Canadian Adventures. Built for thrill-seekers and world travelers.</p>
+            <p className="font-bold">Powered By Token4rge</p>
           </div>
         </div>
       </footer>
+
+      <TermsOfService open={showTos} onOpenChange={setShowTos} />
+      <PrivacyPolicy open={showPrivacy} onOpenChange={setShowPrivacy} />
     </div>
   )
 }
